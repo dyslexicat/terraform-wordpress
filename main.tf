@@ -23,6 +23,14 @@ resource "aws_vpc" "main" {
   }
 }
 
+resource "aws_internet_gateway" "gw" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "Kata6-gw"
+  }
+}
+
 resource "aws_security_group" "allow_ssh" {
   name        = "allow_ssh"
   description = "Allow SSH  inbound traffic"
@@ -33,7 +41,7 @@ resource "aws_security_group" "allow_ssh" {
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
-    cidr_blocks      = [176.234.11.153/32]
+    cidr_blocks      = ["176.234.11.153/32"]
   }
 
   egress {
@@ -57,5 +65,15 @@ resource "aws_subnet" "main" {
 
   tags = {
     Name = "BootcampKata6PublicSubnet"
+  }
+}
+
+resource "aws_instance" "app_server" {
+  ami = "ami-0b1deee75235aa4bb"
+  instance_type = "t2.micro"
+  subnet_id = aws_subnet.main.id
+
+  tags = {
+    Name = "Kata6WordpressServer"
   }
 }
