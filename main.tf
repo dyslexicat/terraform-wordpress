@@ -72,6 +72,7 @@ resource "aws_instance" "app_server" {
   ami = "ami-0b1deee75235aa4bb"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.main.id
+  key_name = "kloia-bootcamp"
 
   tags = {
     Name = "Kata6WordpressServer"
