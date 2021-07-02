@@ -73,6 +73,7 @@ resource "aws_instance" "app_server" {
   instance_type = "t2.micro"
   subnet_id = aws_subnet.main.id
   key_name = "kloia-bootcamp"
+  user_data = "${file("install_script.sh")}"
 
   tags = {
     Name = "Kata6WordpressServer"
