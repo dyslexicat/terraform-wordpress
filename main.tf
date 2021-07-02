@@ -31,6 +31,19 @@ resource "aws_internet_gateway" "gw" {
   }
 }
 
+resource "aws_default_route_table" "main" {
+  default_route_table_id = aws_vpc.main.default_route_table_id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.gw.id
+  }
+
+  tags = {
+    Name = "route internet gw"
+  }
+}
+
 resource "aws_security_group" "allow_ssh" {
   name        = "allow_ssh"
   description = "Allow SSH  inbound traffic"
@@ -74,6 +87,7 @@ resource "aws_instance" "app_server" {
   subnet_id = aws_subnet.main.id
   key_name = "kloia-bootcamp"
   user_data = "${file("install_script.sh")}"
+  security_groups = [aws_security_group.allow_ssh.id]
 
   tags = {
     Name = "Kata6WordpressServer"
